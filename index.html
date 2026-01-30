@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IES Photometric File QC Checklist - Acclaim Lighting</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            /* Acclaim Color Palette */
+            --navy: #03233F;
+            --midnight: #01152A;
+            --ocean: #0B3A59;
+            --slate: #102543;
+            --fog: #E5EAF1;
+            --mist: #F7F9FC;
+            --cloud: #C7D2E3;
+            --steel: #6C7F94;
+            --accent: #E6463D;
+            --coral: #F26C5F;
+            --teal: #2F8C9F;
+
+            /* Semantic colors */
+            --primary: var(--navy);
+            --primary-light: var(--ocean);
+            --success: #22C55E;
+            --warning: #EAB308;
+            --danger: var(--accent);
+            --gray-100: var(--mist);
+            --gray-200: var(--fog);
+            --gray-300: var(--cloud);
+            --gray-500: var(--steel);
+            --gray-700: var(--slate);
+            --gray-900: var(--midnight);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--mist);
+            color: var(--midnight);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Hero Gradient Header */
+        .header {
+            background: linear-gradient(135deg, var(--midnight) 0%, var(--navy) 50%, var(--ocean) 100%);
+            color: white;
+            padding: 32px 40px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 40px rgba(3, 35, 63, 0.3), 0 0 0 1px rgba(255,255,255,0.1) inset;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(230, 70, 61, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--coral), var(--teal));
+        }
+
+        .header-left {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .logo-container {
+            flex-shrink: 0;
+        }
+
+        .acclaim-logo {
+            height: 38px;
+            width: auto;
+        }
+
+        .header-titles h1 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 0;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+            opacity: 0.9;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255,255,255,0.15);
+            position: relative;
+            z-index: 1;
+        }
+
+        .sync-status .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--steel);
+        }
+
+        .sync-status .dot.connected {
+            background: var(--success);
+            box-shadow: 0 0 12px var(--success);
+        }
+
+        .sync-status .dot.syncing {
+            background: var(--warning);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Navigation Tabs - Glass Panel Style */
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid rgba(199, 210, 227, 0.5);
+            box-shadow: 0 4px 20px rgba(3, 35, 63, 0.06);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--steel);
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-tab:hover {
+            color: var(--navy);
+            background: rgba(3, 35, 63, 0.05);
+        }
+
+        .nav-tab.active {
+            color: white;
+            background: linear-gradient(135deg, var(--navy), var(--ocean));
+            box-shadow: 0 4px 12px rgba(3, 35, 63, 0.25);
+        }
+
+        /* Glass Panel Cards */
+        .card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 24px rgba(3, 35, 63, 0.06), 0 0 0 1px rgba(199, 210, 227, 0.3);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid var(--fog);
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--navy);
+            letter-spacing: -0.01em;
+        }
+
+        .card-header .badge {
+            background: linear-gradient(135deg, var(--teal), var(--ocean));
+            color: white;
+            padding: 6px 14px;
+            border-radius: 24px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(47, 140, 159, 0.25);
+        }
+
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--slate);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--cloud);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            background: white;
+            color: var(--midnight);
+            transition: all 0.25s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--steel);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: var(--steel);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--ocean);
+            box-shadow: 0 0 0 4px rgba(11, 58, 89, 0.1);
+            background: white;
+        }
+
+        .form-group select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236C7F94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 44px;
+            appearance: none;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Radio Button Groups */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: var(--mist);
+            border: 1px solid var(--cloud);
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .radio-option:hover {
+            background: var(--fog);
+            border-color: var(--steel);
+        }
+
+        .radio-option:has(input:checked) {
+            background: rgba(11, 58, 89, 0.08);
+            border-color: var(--ocean);
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--ocean);
+            cursor: pointer;
+        }
+
+        /* Checklist Table */
+        .checklist-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(3, 35, 63, 0.04);
+        }
+
+        .checklist-table th {
+            background: linear-gradient(135deg, var(--navy), var(--ocean));
+            color: white;
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .checklist-table th:first-child {
+            width: 60px;
+            text-align: center;
+        }
+
+        .checklist-table th:last-child {
+            width: 150px;
+        }
+
+        .checklist-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--fog);
+            font-size: 14px;
+            background: white;
+            color: var(--slate);
+        }
+
+        .checklist-table tr:nth-child(even) td {
+            background: var(--mist);
+        }
+
+        .checklist-table tr:hover td {
+            background: rgba(47, 140, 159, 0.06);
+        }
+
+        .checklist-table td:first-child {
+            text-align: center;
+        }
+
+        .checklist-table tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 16px;
+        }
+
+        .checklist-table tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 16px;
+        }
+
+        .check-cell input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--teal);
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .status-cell {
+            display: flex;
+            gap: 16px;
+        }
+
+        .status-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .status-option:hover {
+            background: rgba(0,0,0,0.04);
+        }
+
+        .status-option input[type="radio"] {
+            accent-color: var(--success);
+            width: 16px;
+            height: 16px;
+        }
+
+        .status-option.fail input[type="radio"] {
+            accent-color: var(--accent);
+        }
+
+        .status-option.na input[type="radio"] {
+            accent-color: var(--steel);
+        }
+
+        .section-note {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(234, 179, 8, 0.05));
+            border-left: 4px solid var(--warning);
+            padding: 14px 18px;
+            margin-top: 18px;
+            border-radius: 0 12px 12px 0;
+            font-size: 13px;
+            color: var(--slate);
+        }
+
+        /* Procedure Steps */
+        .procedure-steps {
+            counter-reset: step;
+        }
+
+        .procedure-step {
+            position: relative;
+            padding-left: 46px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            color: var(--slate);
+            line-height: 1.6;
+        }
+
+        .procedure-step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--teal), var(--ocean));
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(47, 140, 159, 0.25);
+        }
+
+        /* Final Disposition */
+        .disposition-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .disposition-option {
+            border: 2px solid var(--cloud);
+            border-radius: 16px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .disposition-option::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .disposition-option:hover {
+            border-color: var(--steel);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(3, 35, 63, 0.08);
+        }
+
+        .disposition-option.selected {
+            border-color: var(--ocean);
+            background: rgba(11, 58, 89, 0.04);
+            box-shadow: 0 4px 16px rgba(3, 35, 63, 0.1);
+        }
+
+        .disposition-option.approved::before { background: var(--success); }
+        .disposition-option.approved-corrections::before { background: var(--warning); }
+        .disposition-option.rejected-rework::before { background: var(--accent); }
+        .disposition-option.rejected-new::before { background: #8B5CF6; }
+
+        .disposition-option input {
+            margin-right: 10px;
+            accent-color: var(--ocean);
+            width: 18px;
+            height: 18px;
+        }
+
+        .disposition-option .title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--navy);
+            font-size: 15px;
+        }
+
+        .disposition-option .desc {
+            font-size: 13px;
+            color: var(--steel);
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 26px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--navy), var(--ocean));
+            color: white;
+            box-shadow: 0 4px 14px rgba(3, 35, 63, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(3, 35, 63, 0.35);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #16A34A);
+            color: white;
+            box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--fog);
+            color: var(--slate);
+            border: 1px solid var(--cloud);
+        }
+
+        .btn-secondary:hover {
+            background: var(--cloud);
+            border-color: var(--steel);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent), var(--coral));
+            color: white;
+            box-shadow: 0 4px 14px rgba(230, 70, 61, 0.25);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(230, 70, 61, 0.35);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--ocean);
+            color: var(--ocean);
+        }
+
+        .btn-outline:hover {
+            background: var(--ocean);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-teal {
+            background: linear-gradient(135deg, var(--teal), var(--ocean));
+            color: white;
+            box-shadow: 0 4px 14px rgba(47, 140, 159, 0.25);
+        }
+
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(47, 140, 159, 0.35);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        /* History View - Glass Panel Search */
+        .search-bar {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(199, 210, 227, 0.5);
+        }
+
+        .search-bar input,
+        .search-bar select {
+            padding: 12px 16px;
+            border: 1px solid var(--cloud);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .search-bar input:focus,
+        .search-bar select:focus {
+            outline: none;
+            border-color: var(--ocean);
+            box-shadow: 0 0 0 3px rgba(11, 58, 89, 0.1);
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-bar select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236C7F94' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+            appearance: none;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(3, 35, 63, 0.04);
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--fog);
+        }
+
+        .history-table th {
+            background: linear-gradient(135deg, var(--mist), var(--fog));
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--slate);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            transition: background 0.2s;
+        }
+
+        .history-table th:hover {
+            background: var(--fog);
+        }
+
+        .history-table td {
+            background: white;
+            font-size: 14px;
+            color: var(--slate);
+        }
+
+        .history-table tr:nth-child(even) td {
+            background: var(--mist);
+        }
+
+        .history-table tr:hover td {
+            background: rgba(47, 140, 159, 0.06);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 24px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .status-badge.approved {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.08));
+            color: #15803D;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .status-badge.approved-corrections {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(234, 179, 8, 0.08));
+            color: #A16207;
+            border: 1px solid rgba(234, 179, 8, 0.2);
+        }
+
+        .status-badge.rejected {
+            background: linear-gradient(135deg, rgba(230, 70, 61, 0.15), rgba(230, 70, 61, 0.08));
+            color: #991B1B;
+            border: 1px solid rgba(230, 70, 61, 0.2);
+        }
+
+        .action-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            margin-right: 8px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .action-btn.view {
+            background: linear-gradient(135deg, var(--teal), var(--ocean));
+            color: white;
+            box-shadow: 0 2px 8px rgba(47, 140, 159, 0.25);
+        }
+
+        .action-btn.view:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(47, 140, 159, 0.35);
+        }
+
+        .action-btn.delete {
+            background: linear-gradient(135deg, var(--accent), var(--coral));
+            color: white;
+            box-shadow: 0 2px 8px rgba(230, 70, 61, 0.2);
+        }
+
+        .action-btn.delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 70, 61, 0.3);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(1, 21, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 24px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 90%;
+            padding: 32px;
+            box-shadow: 0 25px 60px rgba(1, 21, 42, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid var(--fog);
+        }
+
+        .modal-header h2 {
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: var(--mist);
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--steel);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--fog);
+            color: var(--navy);
+        }
+
+        /* Quick Reference */
+        .reference-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 14px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(3, 35, 63, 0.04);
+        }
+
+        .reference-table th,
+        .reference-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--fog);
+        }
+
+        .reference-table th {
+            background: linear-gradient(135deg, var(--navy), var(--ocean));
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .reference-table td {
+            background: white;
+            color: var(--slate);
+        }
+
+        .reference-table tr:nth-child(even) td {
+            background: var(--mist);
+        }
+
+        .reference-table tr:hover td {
+            background: rgba(47, 140, 159, 0.06);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 30px;
+            color: var(--steel);
+        }
+
+        .empty-state svg {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 20px;
+            opacity: 0.4;
+            color: var(--cloud);
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Settings */
+        .settings-section {
+            border: 1px solid var(--cloud);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .settings-section h3 {
+            color: var(--navy);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .settings-section h3 svg {
+            width: 24px;
+            height: 24px;
+            color: var(--teal);
+        }
+
+        .setup-steps {
+            background: linear-gradient(135deg, var(--mist), var(--fog));
+            border-radius: 14px;
+            padding: 24px;
+            margin: 18px 0;
+            border: 1px solid rgba(199, 210, 227, 0.5);
+        }
+
+        .setup-steps ol {
+            margin-left: 20px;
+        }
+
+        .setup-steps li {
+            margin-bottom: 14px;
+            line-height: 1.7;
+            color: var(--slate);
+        }
+
+        .setup-steps code {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            font-size: 12px;
+            border: 1px solid var(--cloud);
+            color: var(--ocean);
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-top: 18px;
+            font-weight: 500;
+        }
+
+        .connection-status.connected {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.06));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #15803D;
+        }
+
+        .connection-status.disconnected {
+            background: linear-gradient(135deg, rgba(230, 70, 61, 0.12), rgba(230, 70, 61, 0.06));
+            border: 1px solid rgba(230, 70, 61, 0.3);
+            color: #991B1B;
+        }
+
+        .connection-status.pending {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(234, 179, 8, 0.06));
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            color: #A16207;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .nav-tabs,
+            .button-group,
+            .no-print,
+            .action-btn,
+            .sync-status {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                background: white;
+                backdrop-filter: none;
+                border: 1px solid var(--cloud);
+            }
+
+            .header {
+                background: white !important;
+                color: var(--navy) !important;
+                border: 2px solid var(--navy);
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+                border-radius: 12px;
+            }
+
+            .header::before,
+            .header::after {
+                display: none;
+            }
+
+            .acclaim-logo path[fill="#ffffff"] {
+                fill: var(--navy) !important;
+            }
+
+            .checklist-table th {
+                background: var(--fog) !important;
+                color: var(--navy) !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .checklist-table td {
+                background: white !important;
+            }
+
+            .app-container {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .search-bar {
+                display: none !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 20px;
+            }
+
+            .header-left {
+                align-items: center;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .acclaim-logo {
+                height: 32px;
+            }
+
+            .header-titles h1 {
+                font-size: 16px;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+            }
+
+            .nav-tab {
+                padding: 10px 16px;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .disposition-options {
+                grid-template-columns: 1fr;
+            }
+
+            .checklist-table {
+                font-size: 13px;
+            }
+
+            .status-cell {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--midnight), var(--navy));
+            color: white;
+            padding: 16px 28px;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(1, 21, 42, 0.3);
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            max-width: 420px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--success), #16A34A);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, var(--accent), var(--coral));
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(100%) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(247, 249, 252, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid var(--cloud);
+            border-top-color: var(--teal);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-container">
+                    <svg class="acclaim-logo" viewBox="0 0 952.26 204" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <g>
+                                <path fill="#ef4643" d="M201.24,203.3c-41.13-13.78-49.71-163.55-88.29-188.14-.4-.26-.85.26-.56.63,26.16,33.48,27.47,188.21,60.18,188.21h28.54c.41,0,.51-.57.12-.7Z"/>
+                                <path fill="#ef4643" d="M203.02,0H.98C.44,0,0,.44,0,.98v170.55c0,.55.72.76,1,.29C34.45,115.71,54.35,9.63,102,9.63s67.55,106.08,101,162.18c.28.47,1,.26,1-.29V.98c0-.54-.44-.98-.98-.98Z"/>
+                                <path fill="#ef4643" d="M102,11.83c-22.06,0-11.93,178.95-31.77,191.5-.32.2-.19.68.18.68h63.17c.37,0,.5-.48.18-.68-19.84-12.55-9.71-191.5-31.77-191.5Z"/>
+                                <path fill="#ef4643" d="M91.05,15.16C52.47,39.74,43.89,189.52,2.76,203.3c-.39.13-.3.7.12.7h28.54c32.72,0,34.02-154.72,60.18-188.21.3-.38-.15-.89-.56-.63Z"/>
+                            </g>
+                            <path fill="#ffffff" d="M310.14,34.55h14.72l60.23,135.76h-18.55l-17.4-39.58h-63.29l-17.4,39.58h-18.36l60.04-135.76ZM342.07,114.67l-24.67-56.03-24.67,56.03h49.33Z"/>
+                            <path fill="#ffffff" d="M437.94,172.23c-29.07,0-49.91-22.37-49.91-49.72s20.84-49.72,49.91-49.72c24.09,0,42.83,14.91,48.19,35.56h-17.59c-4.21-12.05-15.68-20.46-30.59-20.46-19.89,0-33.27,15.3-33.27,34.61s13.38,34.61,33.27,34.61c14.91,0,26.39-8.41,30.59-20.46h17.59c-5.35,20.65-24.09,35.57-48.19,35.57Z"/>
+                            <path fill="#ffffff" d="M547.18,172.23c-29.07,0-49.91-22.37-49.91-49.72s20.84-49.72,49.91-49.72c24.09,0,42.83,14.91,48.19,35.56h-17.59c-4.21-12.05-15.68-20.46-30.59-20.46-19.89,0-33.27,15.3-33.27,34.61s13.38,34.61,33.27,34.61c14.91,0,26.39-8.41,30.59-20.46h17.59c-5.35,20.65-24.09,35.57-48.19,35.57Z"/>
+                            <path fill="#ffffff" d="M613.05,26.9h16.44v143.41h-16.44V26.9Z"/>
+                            <path fill="#ffffff" d="M695.39,72.8c14.34,0,27.34,7.46,33.65,16.64v-14.72h16.44v95.61h-16.44v-14.72c-6.31,9.18-19.31,16.64-33.65,16.64-26.77,0-46.85-22.37-46.85-49.72s20.08-49.72,46.85-49.72ZM697.87,87.9c-19.31,0-32.7,15.3-32.7,34.61s13.38,34.61,32.7,34.61,32.51-15.3,32.51-34.61-13.19-34.61-32.51-34.61Z"/>
+                            <path fill="#ffffff" d="M779.33,49.09c-6.5,0-11.86-5.16-11.86-11.66s5.35-11.66,11.86-11.66,11.47,5.35,11.47,11.66-4.97,11.66-11.47,11.66ZM770.91,74.71h16.44v95.61h-16.44v-95.61Z"/>
+                            <path fill="#ffffff" d="M812.67,74.71h16.44v14.72c5.55-10.14,16.06-16.64,28.87-16.64,14.34,0,24.67,7.84,29.45,20.46,5.16-12.62,17.21-20.46,31.36-20.46,20.84,0,33.46,15.49,33.46,38.82v58.7h-16.45v-56.22c0-15.49-6.5-26.2-18.93-26.2-15.49,0-26.2,13.38-26.2,34.99v47.42h-16.44v-56.22c0-15.49-6.31-26.2-18.74-26.2-15.49,0-26.39,13.38-26.39,34.99v47.42h-16.44v-95.61Z"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="header-titles">
+                    <h1>IES Photometric File Quality Control Checklist</h1>
+                </div>
+            </div>
+            <div class="sync-status no-print" id="syncStatus">
+                <span class="dot" id="syncDot"></span>
+                <span id="syncText">Not Connected</span>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="checklist">New Checklist</button>
+            <button class="nav-tab" data-tab="history">View History</button>
+            <button class="nav-tab" data-tab="reference">Quick Reference</button>
+            <button class="nav-tab" data-tab="settings">⚙️ Settings</button>
+        </nav>
+
+        <!-- NEW CHECKLIST TAB -->
+        <div id="checklist-tab" class="tab-content">
+            <!-- File Information -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>File Information</h2>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" placeholder="Enter product name">
+                    </div>
+                    <div class="form-group">
+                        <label for="fileName">File Name</label>
+                        <input type="text" id="fileName" placeholder="Enter IES file name">
+                    </div>
+                    <div class="form-group">
+                        <label>Source</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="source" value="In-house (Viso LabSpion)">
+                                In-house (Viso LabSpion)
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="source" value="Factory">
+                                Factory
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="source" value="Third-party Lab">
+                                Third-party Lab
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="opticType">Optic Type</label>
+                        <input type="text" id="opticType" placeholder="e.g., 20x20, 10x60">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateReviewed">Date Reviewed</label>
+                        <input type="date" id="dateReviewed">
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewedBy">Reviewed By</label>
+                        <input type="text" id="reviewedBy" placeholder="Enter reviewer name">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 1: File Integrity -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Section 1: File Integrity</h2>
+                    <span class="badge">Open the IES file in Photometric Toolbox</span>
+                </div>
+                <table class="checklist-table">
+                    <thead>
+                        <tr>
+                            <th>✓</th>
+                            <th>Check Item</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s1-1"></td>
+                            <td>File opens without errors or warnings</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s1-1-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s1-1-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s1-2"></td>
+                            <td>No repair prompts on file open</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s1-2-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s1-2-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s1-3"></td>
+                            <td>Manufacturer name is correct ([MANUFAC] = Acclaim Lighting)</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s1-3-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s1-3-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s1-4"></td>
+                            <td>Luminaire catalog number is populated ([LUMCAT])</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s1-4-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s1-4-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s1-5"></td>
+                            <td>Luminous dimensions are specified (not 0 x 0)</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s1-5-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s1-5-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section 2: C-Plane Orientation - Asymmetric -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Section 2: C-Plane Orientation</h2>
+                    <span class="badge">Asymmetric Optics (10x60, 10x35, 30x60, etc.)</span>
+                </div>
+                <table class="checklist-table">
+                    <thead>
+                        <tr>
+                            <th>✓</th>
+                            <th>Check Item</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2a-1"></td>
+                            <td>Open Smart Symbols dialog (AGi32) or View Tool (Photometric Toolbox)</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2a-1-status" value="done"> Done</label>
+                                <label class="status-option na"><input type="radio" name="s2a-1-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2a-2"></td>
+                            <td>Polar plot elongation aligns with fixture symbol length</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2a-2-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s2a-2-status" value="fail"> Fail</label>
+                                <label class="status-option na"><input type="radio" name="s2a-2-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2a-3"></td>
+                            <td>If 90° off: Note rotation needed and apply correction</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2a-3-status" value="fixed"> Fixed</label>
+                                <label class="status-option na"><input type="radio" name="s2a-3-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="card-header" style="margin-top: 24px;">
+                    <span class="badge">Symmetric Optics (10x10, 20x20, 40x40, 65x65, etc.)</span>
+                </div>
+                <table class="checklist-table">
+                    <thead>
+                        <tr>
+                            <th>✓</th>
+                            <th>Check Item</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2s-1"></td>
+                            <td>Confirm source followed correct orientation standard</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2s-1-status" value="verified"> Verified</label>
+                                <label class="status-option na"><input type="radio" name="s2s-1-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2s-2"></td>
+                            <td>In-house Viso files: 90° rotation applied before IES export</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2s-2-status" value="yes"> Yes</label>
+                                <label class="status-option na"><input type="radio" name="s2s-2-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s2s-3"></td>
+                            <td>Factory files: Orientation matches other files in same product family</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s2s-3-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s2s-3-status" value="fail"> Fail</label>
+                                <label class="status-option na"><input type="radio" name="s2s-3-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section 3: Beam Symmetry & Distribution -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Section 3: Beam Symmetry & Distribution</h2>
+                </div>
+                <table class="checklist-table">
+                    <thead>
+                        <tr>
+                            <th>✓</th>
+                            <th>Check Item</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s3-1"></td>
+                            <td>View polar plot in Photometric Toolbox 3D View</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s3-1-status" value="done"> Done</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s3-2"></td>
+                            <td>Distribution appears centered (not skewed to one side)</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s3-2-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s3-2-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s3-3"></td>
+                            <td>For symmetric optics: Distribution is visually symmetric in all C-planes</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s3-3-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s3-3-status" value="fail"> Fail</label>
+                                <label class="status-option na"><input type="radio" name="s3-3-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s3-4"></td>
+                            <td>Max candela location is at or near 0° (nadir) for downlights</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s3-4-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s3-4-status" value="fail"> Fail</label>
+                                <label class="status-option na"><input type="radio" name="s3-4-status" value="na"> N/A</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="section-note">
+                    <strong>Note:</strong> Asymmetry indicates goniometer misalignment during testing. Request re-test from source.
+                </div>
+            </div>
+
+            <!-- Section 4: Photometric Values Verification -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Section 4: Photometric Values Verification</h2>
+                </div>
+                <table class="checklist-table">
+                    <thead>
+                        <tr>
+                            <th>✓</th>
+                            <th>Check Item</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s4-1"></td>
+                            <td>Total lumens within ±10% of spec sheet value</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s4-1-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s4-1-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s4-2"></td>
+                            <td>Center beam candela within expected range for optic type</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s4-2-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s4-2-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s4-3"></td>
+                            <td>Beam angle matches specified optic (e.g., 20° for 20x20 optic)</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s4-3-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s4-3-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="check-cell"><input type="checkbox" data-item="s4-4"></td>
+                            <td>Input watts matches spec sheet</td>
+                            <td class="status-cell">
+                                <label class="status-option"><input type="radio" name="s4-4-status" value="pass"> Pass</label>
+                                <label class="status-option fail"><input type="radio" name="s4-4-status" value="fail"> Fail</label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Final Disposition -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Final Disposition</h2>
+                </div>
+                <div class="disposition-options">
+                    <label class="disposition-option approved">
+                        <input type="radio" name="disposition" value="approved">
+                        <div>
+                            <div class="title">✓ APPROVED</div>
+                            <div class="desc">File is ready for website posting</div>
+                        </div>
+                    </label>
+                    <label class="disposition-option approved-corrections">
+                        <input type="radio" name="disposition" value="approved-corrections">
+                        <div>
+                            <div class="title">✓ APPROVED WITH CORRECTIONS</div>
+                            <div class="desc">Corrections applied, file ready</div>
+                        </div>
+                    </label>
+                    <label class="disposition-option rejected-rework">
+                        <input type="radio" name="disposition" value="rejected-rework">
+                        <div>
+                            <div class="title">✗ REJECTED - REWORK NEEDED</div>
+                            <div class="desc">Re-test or correction required</div>
+                        </div>
+                    </label>
+                    <label class="disposition-option rejected-new">
+                        <input type="radio" name="disposition" value="rejected-new">
+                        <div>
+                            <div class="title">✗ REJECTED - REQUEST NEW FILE</div>
+                            <div class="desc">Factory must provide corrected file</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-group" style="margin-top: 24px;">
+                    <label for="notes">Notes / Issues Found</label>
+                    <textarea id="notes" placeholder="Document any issues, corrections made, or additional notes..."></textarea>
+                </div>
+            </div>
+
+            <div class="button-group no-print">
+                <button class="btn btn-success" onclick="saveChecklist()">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                    </svg>
+                    Save Checklist
+                </button>
+                <button class="btn btn-primary" onclick="window.print()">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                    </svg>
+                    Print Checklist
+                </button>
+                <button class="btn btn-secondary" onclick="clearForm()">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                    Clear Form
+                </button>
+            </div>
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="history-tab" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Checklist History</h2>
+                    <button class="btn btn-outline no-print" onclick="refreshFromSheets()" id="refreshBtn" style="margin-left: auto;">
+                        🔄 Refresh from Google Sheets
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by product name, file name, or reviewer...">
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="approved">Approved</option>
+                        <option value="approved-corrections">Approved w/ Corrections</option>
+                        <option value="rejected-rework">Rejected - Rework</option>
+                        <option value="rejected-new">Rejected - New File</option>
+                    </select>
+                    <select id="sourceFilter">
+                        <option value="">All Sources</option>
+                        <option value="In-house (Viso LabSpion)">In-house</option>
+                        <option value="Factory">Factory</option>
+                        <option value="Third-party Lab">Third-party</option>
+                    </select>
+                    <input type="date" id="dateFrom" placeholder="From date">
+                    <input type="date" id="dateTo" placeholder="To date">
+                </div>
+
+                <div class="button-group no-print" style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="exportAllToJSON()">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                        </svg>
+                        Export to JSON (Backup)
+                    </button>
+                    <label class="btn btn-outline file-input-wrapper">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                        </svg>
+                        Import from JSON
+                        <input type="file" accept=".json" onchange="importFromJSON(event)">
+                    </label>
+                </div>
+
+                <div id="historyContent">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortHistory('date')">Date ↕</th>
+                                <th onclick="sortHistory('productName')">Product Name ↕</th>
+                                <th onclick="sortHistory('fileName')">File Name ↕</th>
+                                <th onclick="sortHistory('source')">Source ↕</th>
+                                <th onclick="sortHistory('reviewedBy')">Reviewer ↕</th>
+                                <th onclick="sortHistory('disposition')">Status ↕</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                        </tbody>
+                    </table>
+                    <div id="emptyHistory" class="empty-state hidden">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <h3>No checklists found</h3>
+                        <p>Complete a new checklist to see it here, or configure Google Sheets in Settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REFERENCE TAB -->
+        <div id="reference-tab" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Quick Reference - Common Issues</h2>
+                </div>
+                <table class="reference-table">
+                    <thead>
+                        <tr>
+                            <th>Issue</th>
+                            <th>Symptom</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>90° orientation offset</strong></td>
+                            <td>Polar plot perpendicular to fixture symbol</td>
+                            <td>Apply 90° rotation in Light Inspector or Photometric Toolbox Convert Tool</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Beam asymmetry</strong></td>
+                            <td>Distribution skews to one side in polar plot</td>
+                            <td>Request re-test with proper goniometer leveling</td>
+                        </tr>
+                        <tr>
+                            <td><strong>File won't open</strong></td>
+                            <td>Photometric Toolbox shows errors</td>
+                            <td>Use Repair Tool or request corrected file from source</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Values don't match spec</strong></td>
+                            <td>Lumens/candela outside ±10% tolerance</td>
+                            <td>Verify test conditions; may need re-test</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>In-House Testing (Viso LabSpion)</h2>
+                </div>
+                <div class="procedure-steps">
+                    <div class="procedure-step">Mount fixture with light source pointing directly at sensor</div>
+                    <div class="procedure-step">Ensure fixture is level and plumb on goniometer mount</div>
+                    <div class="procedure-step">Run measurement in Light Inspector</div>
+                    <div class="procedure-step">Before IES export: Go to Edit → Photometric → Corrections</div>
+                    <div class="procedure-step">Apply 90° C-plane rotation using the slider</div>
+                    <div class="procedure-step">Export as IES file</div>
+                    <div class="procedure-step">Verify in Photometric Toolbox before posting to website</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Factory Files</h2>
+                </div>
+                <div class="procedure-steps">
+                    <div class="procedure-step">Open file in Photometric Toolbox to check for errors</div>
+                    <div class="procedure-step">Verify orientation using View Tool or AGi32 Smart Symbols</div>
+                    <div class="procedure-step">Check beam symmetry in 3D view</div>
+                    <div class="procedure-step">If orientation is 90° off: Use Convert Tool to apply Spin rotation</div>
+                    <div class="procedure-step">If asymmetry detected: Request re-test from factory with proper leveling</div>
+                    <div class="procedure-step">Compare values against spec sheet before approval</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div id="settings-tab" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2>⚙️ Settings</h2>
+                </div>
+
+                <div class="settings-section">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <path d="M12 18v-6"/>
+                            <path d="M9 15l3-3 3 3"/>
+                        </svg>
+                        Google Sheets Integration
+                    </h3>
+                    <p style="color: var(--gray-500); margin-bottom: 16px;">
+                        Connect to Google Sheets for team-wide, real-time data sharing. All checklists will be saved to and loaded from your shared spreadsheet.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="sheetsUrl">Google Apps Script Web App URL</label>
+                        <input type="text" id="sheetsUrl" placeholder="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec">
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="testConnection()">Test Connection</button>
+                        <button class="btn btn-success" onclick="saveSettings()">Save Settings</button>
+                        <button class="btn btn-secondary" onclick="disconnectSheets()">Disconnect</button>
+                    </div>
+
+                    <div id="connectionStatus" class="connection-status disconnected">
+                        <span>⚪</span> Not connected to Google Sheets
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>📋 Setup Instructions</h3>
+                    <div class="setup-steps">
+                        <ol>
+                            <li>
+                                <strong>Create a new Google Sheet</strong> in your Acclaim Lighting Google Workspace.
+                                Name it something like "IES QC Checklists Database"
+                            </li>
+                            <li>
+                                <strong>Open Extensions → Apps Script</strong> from the menu bar
+                            </li>
+                            <li>
+                                <strong>Delete any existing code</strong> (select all, delete) and paste the script from below, then click <strong>Save</strong> (Ctrl+S)
+                            </li>
+                            <li>
+                                <strong>Click Deploy → New deployment</strong>
+                            </li>
+                            <li>
+                                Click the gear ⚙️ next to "Select type" and choose: <code>Web app</code>
+                            </li>
+                            <li>
+                                <span style="color: #E74C3C; font-weight: bold;">⚠️ CRITICAL:</span><br>
+                                Set "Execute as": <code>Me</code><br>
+                                Set "Who has access": <code><strong>Anyone</strong></code><br>
+                                <span style="color: #666; font-size: 12px;">(NOT "Anyone with Google Account" - that causes connection errors)</span>
+                            </li>
+                            <li>
+                                <strong>Click Deploy</strong> and authorize when prompted (click through any warnings)
+                            </li>
+                            <li>
+                                <strong>Copy the Web App URL</strong> (ends with /exec) and paste it above
+                            </li>
+                        </ol>
+                        <p style="margin-top: 16px; padding: 12px; background: #FEF9E7; border-radius: 8px; font-size: 13px;">
+                            <strong>Already deployed but getting errors?</strong> Go to Deploy → Manage deployments → Edit (pencil icon) → Change "Who has access" to "Anyone" → Deploy new version
+                        </p>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>📜 Google Apps Script Code</h3>
+                    <p style="color: var(--gray-500); margin-bottom: 12px;">Copy this entire script and paste it into your Google Apps Script editor:</p>
+                    <div style="position: relative;">
+                        <button class="btn btn-secondary" onclick="copyScript()" style="position: absolute; top: 10px; right: 10px; padding: 6px 12px; font-size: 13px;">
+                            📋 Copy Script
+                        </button>
+                        <pre id="scriptCode" style="background: var(--gray-900); color: #E9ECEF; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.5; max-height: 400px; overflow-y: auto;">
+// IES QC Checklist - Google Sheets Backend v2
+// IMPORTANT: After pasting, Deploy > New Deployment
+// Set "Who has access" to "Anyone" (NOT "Anyone with Google Account")
+
+const SHEET_NAME = 'Checklists';
+
+function doGet(e) {
+  return handleRequest(e, 'GET');
+}
+
+function doPost(e) {
+  return handleRequest(e, 'POST');
+}
+
+function handleRequest(e, method) {
+  try {
+    const action = e.parameter.action || 'read';
+    let result;
+
+    if (action === 'write' && method === 'POST') {
+      let data;
+      if (e.parameter.data) {
+        data = JSON.parse(e.parameter.data);
+      } else if (e.postData && e.postData.contents) {
+        data = JSON.parse(e.postData.contents);
+      }
+      result = writeChecklist(data);
+    } else if (action === 'read') {
+      result = readAllChecklists();
+    } else if (action === 'delete') {
+      result = deleteChecklist(e.parameter.id);
+    } else if (action === 'test') {
+      result = { success: true, message: 'Connected!' };
+    } else {
+      result = { success: false, error: 'Unknown action' };
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    const headers = ['ID', 'Timestamp', 'Product Name', 'File Name', 'Source',
+      'Optic Type', 'Date Reviewed', 'Reviewed By', 'Disposition', 'Notes', 'Check Items JSON'];
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function writeChecklist(data) {
+  const sheet = getOrCreateSheet();
+  sheet.appendRow([
+    String(data.id), data.timestamp, data.productName, data.fileName,
+    data.source, data.opticType, data.dateReviewed, data.reviewedBy,
+    data.disposition, data.notes, JSON.stringify(data.checkItems || {})
+  ]);
+  return { success: true };
+}
+
+function readAllChecklists() {
+  const sheet = getOrCreateSheet();
+  const data = sheet.getDataRange().getValues();
+  if (data.length <= 1) return { success: true, checklists: [] };
+
+  const checklists = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    let checkItems = {};
+    try { checkItems = row[10] ? JSON.parse(row[10]) : {}; } catch(e) {}
+    let dateVal = row[6];
+    if (dateVal instanceof Date) {
+      dateVal = Utilities.formatDate(dateVal, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+    }
+    checklists.push({
+      id: String(row[0]), timestamp: row[1], productName: row[2],
+      fileName: row[3], source: row[4], opticType: row[5],
+      dateReviewed: dateVal, reviewedBy: row[7], disposition: row[8],
+      notes: row[9], checkItems: checkItems
+    });
+  }
+  return { success: true, checklists: checklists };
+}
+
+function deleteChecklist(id) {
+  const sheet = getOrCreateSheet();
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(id)) {
+      sheet.deleteRow(i + 1);
+      return { success: true };
+    }
+  }
+  return { success: false, message: 'Not found' };
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Entry Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Checklist Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent"></div>
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="printEntry()">Print</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Initialize app
+        let checklists = [];
+        let sortField = 'date';
+        let sortDirection = 'desc';
+        let currentViewEntry = null;
+        let sheetsUrl = '';
+        let isConnected = false;
+
+        // Load on start
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSettings();
+            loadFromStorage();
+            setDefaultDate();
+            setupEventListeners();
+            updateSyncStatus();
+
+            // If connected to sheets, load from there
+            if (isConnected && sheetsUrl) {
+                refreshFromSheets();
+            } else {
+                renderHistory();
+            }
+        });
+
+        function setDefaultDate() {
+            document.getElementById('dateReviewed').valueAsDate = new Date();
+        }
+
+        function setupEventListeners() {
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Disposition selection styling
+            document.querySelectorAll('.disposition-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.disposition-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+
+            // Search and filter listeners
+            document.getElementById('searchInput').addEventListener('input', renderHistory);
+            document.getElementById('statusFilter').addEventListener('change', renderHistory);
+            document.getElementById('sourceFilter').addEventListener('change', renderHistory);
+            document.getElementById('dateFrom').addEventListener('change', renderHistory);
+            document.getElementById('dateTo').addEventListener('change', renderHistory);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+        }
+
+        // ============ STORAGE FUNCTIONS ============
+
+        function loadSettings() {
+            sheetsUrl = localStorage.getItem('iesQcSheetsUrl') || '';
+            isConnected = localStorage.getItem('iesQcConnected') === 'true';
+
+            if (sheetsUrl) {
+                document.getElementById('sheetsUrl').value = sheetsUrl;
+            }
+            updateConnectionStatusUI();
+        }
+
+        function saveSettings() {
+            sheetsUrl = document.getElementById('sheetsUrl').value.trim();
+            localStorage.setItem('iesQcSheetsUrl', sheetsUrl);
+
+            if (sheetsUrl) {
+                testConnection();
+            } else {
+                isConnected = false;
+                localStorage.setItem('iesQcConnected', 'false');
+                updateConnectionStatusUI();
+                updateSyncStatus();
+                showToast('Settings saved (offline mode)', 'success');
+            }
+        }
+
+        function disconnectSheets() {
+            sheetsUrl = '';
+            isConnected = false;
+            localStorage.setItem('iesQcSheetsUrl', '');
+            localStorage.setItem('iesQcConnected', 'false');
+            document.getElementById('sheetsUrl').value = '';
+            updateConnectionStatusUI();
+            updateSyncStatus();
+            showToast('Disconnected from Google Sheets', 'success');
+        }
+
+        function loadFromStorage() {
+            const stored = localStorage.getItem('iesQcChecklists');
+            if (stored) {
+                checklists = JSON.parse(stored);
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('iesQcChecklists', JSON.stringify(checklists));
+        }
+
+        // ============ GOOGLE SHEETS FUNCTIONS ============
+
+        // Google Apps Script fetch wrapper - handles redirects properly
+        async function gsFetch(url, options = {}) {
+            // Google Apps Script requires following redirects
+            const defaultOptions = {
+                redirect: 'follow',
+                mode: 'cors',
+            };
+
+            const response = await fetch(url, { ...defaultOptions, ...options });
+
+            // Handle the response
+            const text = await response.text();
+
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                // If we get HTML back, it might be an auth error
+                if (text.includes('<!DOCTYPE') || text.includes('<html')) {
+                    throw new Error('Authorization required. Make sure the script is deployed with "Anyone" access.');
+                }
+                throw new Error('Invalid response from server');
+            }
+        }
+
+        async function testConnection() {
+            if (!sheetsUrl) {
+                showToast('Please enter a Google Apps Script URL', 'error');
+                return;
+            }
+
+            // Validate URL format
+            if (!sheetsUrl.includes('script.google.com/macros/s/')) {
+                showToast('Invalid URL format. Should be: https://script.google.com/macros/s/.../exec', 'error');
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                const result = await gsFetch(`${sheetsUrl}?action=test`);
+
+                if (result.success) {
+                    isConnected = true;
+                    localStorage.setItem('iesQcConnected', 'true');
+                    localStorage.setItem('iesQcSheetsUrl', sheetsUrl);
+                    updateConnectionStatusUI();
+                    updateSyncStatus();
+                    showToast('✅ Connected to Google Sheets!', 'success');
+                    refreshFromSheets();
+                } else {
+                    throw new Error(result.error || 'Connection failed');
+                }
+            } catch (error) {
+                isConnected = false;
+                localStorage.setItem('iesQcConnected', 'false');
+                updateConnectionStatusUI();
+                updateSyncStatus();
+
+                let errorMsg = error.message;
+                if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
+                    errorMsg = 'Network error. Check that:\n1. The URL ends with /exec\n2. Deployment is set to "Anyone"\n3. You authorized the script when deploying';
+                }
+                showToast('❌ ' + errorMsg, 'error');
+            }
+
+            showLoading(false);
+        }
+
+        async function refreshFromSheets() {
+            if (!isConnected || !sheetsUrl) {
+                showToast('Not connected to Google Sheets. Go to Settings to connect.', 'error');
+                return;
+            }
+
+            showLoading(true);
+            updateSyncStatus('syncing');
+
+            try {
+                const result = await gsFetch(`${sheetsUrl}?action=read`);
+
+                if (result.success) {
+                    checklists = result.checklists || [];
+                    saveToStorage();
+                    renderHistory();
+                    updateSyncStatus('connected');
+                    showToast(`Loaded ${checklists.length} checklists from Google Sheets`, 'success');
+                } else {
+                    throw new Error(result.error || 'Failed to load data');
+                }
+            } catch (error) {
+                updateSyncStatus('error');
+                showToast('Failed to refresh: ' + error.message, 'error');
+            }
+
+            showLoading(false);
+        }
+
+        async function saveToSheets(data) {
+            if (!isConnected || !sheetsUrl) {
+                return false;
+            }
+
+            try {
+                // For POST requests to Google Apps Script, we need to use a form-style submission
+                // because of CORS restrictions with JSON
+                const formData = new URLSearchParams();
+                formData.append('data', JSON.stringify(data));
+
+                const result = await gsFetch(`${sheetsUrl}?action=write`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+                return result.success;
+            } catch (error) {
+                console.error('Failed to save to sheets:', error);
+                return false;
+            }
+        }
+
+        async function deleteFromSheets(id) {
+            if (!isConnected || !sheetsUrl) {
+                return false;
+            }
+
+            try {
+                const result = await gsFetch(`${sheetsUrl}?action=delete&id=${id}`);
+                return result.success;
+            } catch (error) {
+                console.error('Failed to delete from sheets:', error);
+                return false;
+            }
+        }
+
+        function updateConnectionStatusUI() {
+            const statusDiv = document.getElementById('connectionStatus');
+            if (isConnected) {
+                statusDiv.className = 'connection-status connected';
+                statusDiv.innerHTML = '<span>🟢</span> Connected to Google Sheets';
+            } else {
+                statusDiv.className = 'connection-status disconnected';
+                statusDiv.innerHTML = '<span>⚪</span> Not connected to Google Sheets';
+            }
+        }
+
+        function updateSyncStatus(status) {
+            const dot = document.getElementById('syncDot');
+            const text = document.getElementById('syncText');
+
+            if (status === 'syncing') {
+                dot.className = 'dot syncing';
+                text.textContent = 'Syncing...';
+            } else if (status === 'connected' || isConnected) {
+                dot.className = 'dot connected';
+                text.textContent = 'Google Sheets Connected';
+            } else if (status === 'error') {
+                dot.className = 'dot';
+                text.textContent = 'Sync Error';
+            } else {
+                dot.className = 'dot';
+                text.textContent = 'Local Storage Only';
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
+        }
+
+        // ============ FORM FUNCTIONS ============
+
+        function gatherFormData() {
+            const data = {
+                id: Date.now().toString(),
+                productName: document.getElementById('productName').value,
+                fileName: document.getElementById('fileName').value,
+                source: document.querySelector('input[name="source"]:checked')?.value || '',
+                opticType: document.getElementById('opticType').value,
+                dateReviewed: document.getElementById('dateReviewed').value,
+                reviewedBy: document.getElementById('reviewedBy').value,
+                disposition: document.querySelector('input[name="disposition"]:checked')?.value || '',
+                notes: document.getElementById('notes').value,
+                checkItems: {},
+                timestamp: new Date().toISOString()
+            };
+
+            document.querySelectorAll('.checklist-table tbody tr').forEach(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                const radioGroup = row.querySelector('input[type="radio"]');
+                if (checkbox && radioGroup) {
+                    const itemName = radioGroup.name;
+                    const checked = checkbox.checked;
+                    const status = document.querySelector(`input[name="${itemName}"]:checked`)?.value || '';
+                    data.checkItems[itemName] = { checked, status };
+                }
+            });
+
+            return data;
+        }
+
+        function validateForm() {
+            const data = gatherFormData();
+            const errors = [];
+
+            if (!data.productName.trim()) errors.push('Product Name');
+            if (!data.fileName.trim()) errors.push('File Name');
+            if (!data.source) errors.push('Source');
+            if (!data.dateReviewed) errors.push('Date Reviewed');
+            if (!data.reviewedBy.trim()) errors.push('Reviewed By');
+            if (!data.disposition) errors.push('Final Disposition');
+
+            return errors;
+        }
+
+        async function saveChecklist() {
+            const errors = validateForm();
+            if (errors.length > 0) {
+                showToast('Please fill in: ' + errors.join(', '), 'error');
+                return;
+            }
+
+            const data = gatherFormData();
+
+            showLoading(true);
+
+            // Save locally first
+            checklists.unshift(data);
+            saveToStorage();
+
+            // Then try to save to Google Sheets
+            if (isConnected && sheetsUrl) {
+                updateSyncStatus('syncing');
+                const success = await saveToSheets(data);
+                if (success) {
+                    updateSyncStatus('connected');
+                    showToast('✅ Checklist saved to Google Sheets!', 'success');
+                } else {
+                    showToast('⚠️ Saved locally, but failed to sync to Google Sheets', 'warning');
+                }
+            } else {
+                showToast('Checklist saved locally', 'success');
+            }
+
+            showLoading(false);
+            renderHistory();
+            clearForm(true); // Silent clear
+        }
+
+        function clearForm(silent = false) {
+            if (!silent && !confirm('Are you sure you want to clear the form?')) return;
+
+            document.querySelectorAll('#checklist-tab input[type="text"], #checklist-tab textarea').forEach(el => el.value = '');
+            document.querySelectorAll('#checklist-tab input[type="checkbox"], #checklist-tab input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.disposition-option').forEach(o => o.classList.remove('selected'));
+            setDefaultDate();
+
+            if (!silent) showToast('Form cleared', 'success');
+        }
+
+        // ============ HISTORY FUNCTIONS ============
+
+        function getFilteredChecklists() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sourceFilter = document.getElementById('sourceFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            return checklists.filter(c => {
+                const matchesSearch = !search ||
+                    (c.productName || '').toLowerCase().includes(search) ||
+                    (c.fileName || '').toLowerCase().includes(search) ||
+                    (c.reviewedBy || '').toLowerCase().includes(search);
+
+                const matchesStatus = !statusFilter || c.disposition === statusFilter;
+                const matchesSource = !sourceFilter || c.source === sourceFilter;
+                const matchesDateFrom = !dateFrom || c.dateReviewed >= dateFrom;
+                const matchesDateTo = !dateTo || c.dateReviewed <= dateTo;
+
+                return matchesSearch && matchesStatus && matchesSource && matchesDateFrom && matchesDateTo;
+            });
+        }
+
+        function sortHistory(field) {
+            if (sortField === field) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortField = field;
+                sortDirection = 'asc';
+            }
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const filtered = getFilteredChecklists();
+
+            filtered.sort((a, b) => {
+                let aVal = a[sortField] || '';
+                let bVal = b[sortField] || '';
+                if (sortField === 'date') {
+                    aVal = a.dateReviewed || '';
+                    bVal = b.dateReviewed || '';
+                }
+                const compare = String(aVal).localeCompare(String(bVal));
+                return sortDirection === 'asc' ? compare : -compare;
+            });
+
+            const tbody = document.getElementById('historyTableBody');
+            const emptyState = document.getElementById('emptyHistory');
+            const table = document.querySelector('.history-table');
+
+            if (filtered.length === 0) {
+                table.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            table.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            tbody.innerHTML = filtered.map(c => `
+                <tr>
+                    <td>${formatDate(c.dateReviewed)}</td>
+                    <td>${escapeHtml(c.productName)}</td>
+                    <td>${escapeHtml(c.fileName)}</td>
+                    <td>${escapeHtml(c.source)}</td>
+                    <td>${escapeHtml(c.reviewedBy)}</td>
+                    <td>${getStatusBadge(c.disposition)}</td>
+                    <td>
+                        <button class="action-btn view" onclick="viewEntry('${c.id}')">View</button>
+                        <button class="action-btn delete" onclick="deleteEntry('${c.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusBadge(disposition) {
+            const labels = {
+                'approved': '<span class="status-badge approved">Approved</span>',
+                'approved-corrections': '<span class="status-badge approved-corrections">Approved w/ Corrections</span>',
+                'rejected-rework': '<span class="status-badge rejected">Rejected - Rework</span>',
+                'rejected-new': '<span class="status-badge rejected">Rejected - New File</span>'
+            };
+            return labels[disposition] || disposition || '';
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function viewEntry(id) {
+            const entry = checklists.find(c => c.id === id);
+            if (!entry) return;
+
+            currentViewEntry = entry;
+            const content = document.getElementById('modalContent');
+
+            content.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px;">
+                    <div><strong>Product Name:</strong> ${escapeHtml(entry.productName)}</div>
+                    <div><strong>File Name:</strong> ${escapeHtml(entry.fileName)}</div>
+                    <div><strong>Source:</strong> ${escapeHtml(entry.source)}</div>
+                    <div><strong>Optic Type:</strong> ${escapeHtml(entry.opticType)}</div>
+                    <div><strong>Date Reviewed:</strong> ${formatDate(entry.dateReviewed)}</div>
+                    <div><strong>Reviewed By:</strong> ${escapeHtml(entry.reviewedBy)}</div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong>Final Disposition:</strong> ${getStatusBadge(entry.disposition)}
+                </div>
+                ${entry.notes ? `<div style="margin-bottom: 16px;"><strong>Notes:</strong><br>${escapeHtml(entry.notes)}</div>` : ''}
+                <div>
+                    <strong>Checklist Items:</strong>
+                    <table class="checklist-table" style="margin-top: 12px;">
+                        <thead>
+                            <tr><th>Item</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(entry.checkItems || {}).map(([key, val]) => `
+                                <tr>
+                                    <td>${key}</td>
+                                    <td>${val.checked ? '✓' : '○'} ${val.status || ''}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('viewModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('viewModal').classList.remove('active');
+            currentViewEntry = null;
+        }
+
+        function printEntry() {
+            window.print();
+        }
+
+        async function deleteEntry(id) {
+            if (!confirm('Are you sure you want to delete this checklist entry?')) return;
+
+            showLoading(true);
+
+            // Delete from local storage
+            checklists = checklists.filter(c => c.id !== id);
+            saveToStorage();
+
+            // Delete from Google Sheets if connected
+            if (isConnected && sheetsUrl) {
+                await deleteFromSheets(id);
+            }
+
+            showLoading(false);
+            renderHistory();
+            showToast('Entry deleted', 'success');
+        }
+
+        // ============ IMPORT/EXPORT ============
+
+        function exportAllToJSON() {
+            if (checklists.length === 0) {
+                showToast('No checklists to export', 'error');
+                return;
+            }
+
+            const dataStr = JSON.stringify(checklists, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ies-qc-checklists-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`Exported ${checklists.length} checklists`, 'success');
+        }
+
+        function importFromJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) {
+                        throw new Error('Invalid format');
+                    }
+
+                    const existingIds = new Set(checklists.map(c => c.id));
+                    let newCount = 0;
+
+                    for (const entry of imported) {
+                        if (!existingIds.has(entry.id)) {
+                            checklists.push(entry);
+                            newCount++;
+
+                            // Also save to Google Sheets if connected
+                            if (isConnected && sheetsUrl) {
+                                await saveToSheets(entry);
+                            }
+                        }
+                    }
+
+                    checklists.sort((a, b) => (b.dateReviewed || '').localeCompare(a.dateReviewed || ''));
+                    saveToStorage();
+                    renderHistory();
+                    showToast(`Imported ${newCount} new checklists`, 'success');
+                } catch (err) {
+                    showToast('Error reading file: ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ============ UTILITIES ============
+
+        function copyScript() {
+            const scriptCode = document.getElementById('scriptCode').textContent;
+            navigator.clipboard.writeText(scriptCode).then(() => {
+                showToast('Script copied to clipboard!', 'success');
+            }).catch(() => {
+                showToast('Failed to copy - please select and copy manually', 'error');
+            });
+        }
+
+        function showToast(message, type = '') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 4000);
+        }
+    </script>
+</body>
+</html>

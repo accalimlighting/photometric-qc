@@ -443,6 +443,36 @@
             color: var(--slate);
         }
 
+        .section-followup {
+            margin-top: 18px;
+            padding: 14px 18px;
+            border: 1px dashed var(--cloud);
+            border-radius: 12px;
+            background: var(--mist);
+        }
+
+        .section-followup label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--slate);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .section-followup textarea {
+            width: 100%;
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .section-followup .followup-hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--steel);
+        }
+
         /* Procedure Steps */
         .procedure-steps {
             counter-reset: step;
@@ -1333,6 +1363,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="section-followup hidden" data-section="s1">
+                    <label for="s1-followup">Fail notes / screenshot</label>
+                    <textarea id="s1-followup" placeholder="Describe the failure or add notes..."></textarea>
+                    <div class="followup-hint">Attach screenshots via email if needed.</div>
+                </div>
             </div>
 
             <!-- Section 2: C-Plane Orientation - Asymmetric -->
@@ -1419,6 +1454,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="section-followup hidden" data-section="s2">
+                    <label for="s2-followup">Fail notes / screenshot</label>
+                    <textarea id="s2-followup" placeholder="Describe the failure or add notes..."></textarea>
+                    <div class="followup-hint">Attach screenshots via email if needed.</div>
+                </div>
             </div>
 
             <!-- Section 3: Beam Symmetry & Distribution -->
@@ -1473,6 +1513,11 @@
                 <div class="section-note">
                     <strong>Note:</strong> Asymmetry indicates goniometer misalignment during testing. Request re-test from source.
                 </div>
+                <div class="section-followup hidden" data-section="s3">
+                    <label for="s3-followup">Fail notes / screenshot</label>
+                    <textarea id="s3-followup" placeholder="Describe the failure or add notes..."></textarea>
+                    <div class="followup-hint">Attach screenshots via email if needed.</div>
+                </div>
             </div>
 
                                    <!-- Section 4: Photometric Values Verification -->
@@ -1523,6 +1568,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="section-followup hidden" data-section="s4">
+                    <label for="s4-followup">Fail notes / screenshot</label>
+                    <textarea id="s4-followup" placeholder="Describe the failure or add notes..."></textarea>
+                    <div class="followup-hint">Attach screenshots via email if needed.</div>
+                </div>
             </div>
 
             <!-- Section 5: Export Formats -->
@@ -1565,6 +1615,11 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="section-followup hidden" data-section="s5">
+                    <label for="s5-followup">Fail notes / screenshot</label>
+                    <textarea id="s5-followup" placeholder="Describe the failure or add notes..."></textarea>
+                    <div class="followup-hint">Attach screenshots via email if needed.</div>
+                </div>
             </div>
 
             <!-- Final Disposition -->
@@ -2010,6 +2065,7 @@ function deleteChecklist(id) {
             setDefaultDate();
             setupEventListeners();
             updateSyncStatus();
+            updateSectionFollowups();
 
             // If connected to sheets, load from there
             if (isConnected && sheetsUrl) {
@@ -2043,6 +2099,13 @@ function deleteChecklist(id) {
             document.getElementById('sourceFilter').addEventListener('change', renderHistory);
             document.getElementById('dateFrom').addEventListener('change', renderHistory);
             document.getElementById('dateTo').addEventListener('change', renderHistory);
+
+            // Show follow-up notes when fail is selected
+            document.getElementById('checklist-tab').addEventListener('change', (event) => {
+                if (event.target.matches('input[type="radio"]')) {
+                    updateSectionFollowups();
+                }
+            });
         }
 
         function switchTab(tabName) {
@@ -2268,6 +2331,15 @@ function deleteChecklist(id) {
             }
         }
 
+        function updateSectionFollowups() {
+            document.querySelectorAll('.section-followup').forEach((followup) => {
+                const card = followup.closest('.card');
+                if (!card) return;
+                const hasFail = card.querySelector('input[type="radio"][value="fail"]:checked');
+                followup.classList.toggle('hidden', !hasFail);
+            });
+        }
+
         function showLoading(show) {
             document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
         }
@@ -2286,6 +2358,7 @@ function deleteChecklist(id) {
                 disposition: document.querySelector('input[name="disposition"]:checked')?.value || '',
                 notes: document.getElementById('notes').value,
                 checkItems: {},
+                sectionFollowups: {},
                 timestamp: new Date().toISOString()
             };
 
@@ -2297,6 +2370,15 @@ function deleteChecklist(id) {
                     const checked = checkbox.checked;
                     const status = document.querySelector(`input[name="${itemName}"]:checked`)?.value || '';
                     data.checkItems[itemName] = { checked, status };
+                }
+            });
+
+            document.querySelectorAll('.section-followup').forEach((followup) => {
+                const key = followup.dataset.section;
+                if (!key) return;
+                const note = followup.querySelector('textarea')?.value.trim() || '';
+                if (note) {
+                    data.sectionFollowups[key] = { note };
                 }
             });
 
@@ -2358,6 +2440,7 @@ function deleteChecklist(id) {
             document.querySelectorAll('#checklist-tab input[type="checkbox"], #checklist-tab input[type="radio"]').forEach(el => el.checked = false);
             document.querySelectorAll('.disposition-option').forEach(o => o.classList.remove('selected'));
             setDefaultDate();
+            updateSectionFollowups();
 
             if (!silent) showToast('Form cleared', 'success');
         }
@@ -2467,6 +2550,20 @@ function deleteChecklist(id) {
             currentViewEntry = entry;
             const content = document.getElementById('modalContent');
 
+            const followups = entry.sectionFollowups || {};
+            const followupHtml = Object.keys(followups).length ? `
+                <div style="margin-bottom: 16px;">
+                    <strong>Section Fail Notes:</strong>
+                    <ul style="margin-top: 8px; padding-left: 18px;">
+                        ${Object.entries(followups).map(([key, val]) => `
+                            <li>
+                                ${escapeHtml(key.toUpperCase())}: ${escapeHtml(val.note || '')}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            ` : '';
+
             content.innerHTML = `
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px;">
                     <div><strong>Product Name:</strong> ${escapeHtml(entry.productName)}</div>
@@ -2480,6 +2577,7 @@ function deleteChecklist(id) {
                     <strong>Final Disposition:</strong> ${getStatusBadge(entry.disposition)}
                 </div>
                 ${entry.notes ? `<div style="margin-bottom: 16px;"><strong>Notes:</strong><br>${escapeHtml(entry.notes)}</div>` : ''}
+                ${followupHtml}
                 <div>
                     <strong>Checklist Items:</strong>
                     <table class="checklist-table" style="margin-top: 12px;">
